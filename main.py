@@ -22,10 +22,15 @@ def generate_perlin_noise(shape, scale, octaves, persistence, lacunarity):
     return perl_noise
 
 
+def generate_random_normal_vector():
+    
+
+
 class ForestFireSimulation:
-    def __init__(self, shape, cutout, p, k, moore=False, scale=75, octaves=5, persistence=0.5, lacunarity=1.5):
+    def __init__(self, shape, cutout, p, ps, k, moore=False, scale=75, octaves=5, persistence=0.5, lacunarity=1.5):
         self.shape = shape
         self.p = p
+        self.ps = ps
         self.k = k
         self.neighbourhood_moore = moore
         perl_noise = generate_perlin_noise(shape, scale, octaves, persistence, lacunarity)
@@ -43,9 +48,9 @@ class ForestFireSimulation:
                 elif value == 1:
                     image[x, y] = [0, 200, 0]
                 elif value == 2:
-                    image[x, y] = [200, 0, 0]
+                    image[x, y] = [250, 30, 30]
                 elif value == 3:
-                    image[x, y] = [40, 25, 20]
+                    image[x, y] = [75, 60, 35]
 
         plt.imshow(image)
         plt.show()
@@ -86,7 +91,7 @@ class ForestFireSimulation:
                     new_state[x, y] = 0
                 elif value == 1:
                     neighbours = self.get_neighbour_tiles(x, y)
-                    chance = 0
+                    chance = self.ps
                     for neighbour in neighbours:
                         if self.forest[neighbour[0], neighbour[1]] == 2:
                             chance = chance + self.p
@@ -107,7 +112,7 @@ class ForestFireSimulation:
 
 
 if __name__ == '__main__':
-    simulation = ForestFireSimulation((255, 255), -0.1, 0.3, 50, True)
+    simulation = ForestFireSimulation((255, 255), -0.1, 0.3, 0.00001,  50, True)
     simulation.start_fire()
     simulation.display_current_state()
     for _ in range(100):
